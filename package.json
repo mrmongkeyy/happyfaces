@@ -1,0 +1,28 @@
+{
+  "name": "happyfaces",
+  "version": "1.0.0",
+  "description": "saving moments app",
+  "main": "app.js",
+  "scripts": {
+    "test": "nodemon app"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/mrmongkeyy/happyfaces"
+  },
+  "keywords": [
+    "helloworldthisisgema",
+    "gema",
+    "happyfaces",
+    "nodejs",
+    "goodapp",
+    "scratch",
+    "vanilajs",
+    "express"
+  ],
+  "author": "gema/mrmongkeyy",
+  "license": "ISC",
+  "dependencies": {
+    "nodemailer": "^6.9.1"
+  }
+}
