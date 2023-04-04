@@ -4,7 +4,7 @@ module.exports = {
 			<!doctype html>
 			<html>
 				<head>
-					<title>faceback</title>
+					<title>happyfaces</title>
 					<meta name=viewport content=width=device-width,initial-scale=1>
 					<style>
 						#content{
@@ -74,6 +74,7 @@ module.exports = {
 							}
 						}
 					</style>
+					<link rel=icon href=file?fn=happy-face.png>
 				</head>
 				<body></body>
 				<script src=/scripts?fn=infinity></script>
