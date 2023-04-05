@@ -12,7 +12,7 @@ module.exports = [
 		url:'/',
 		mM:'get',
 		response(req,res){
-			view.go(req,res);
+			view.go('app',req,res);
 		}
 	},
 	{
@@ -114,6 +114,20 @@ module.exports = [
 		mM:'get',
 		response(req,res){
 			handleVerify(req,res);
+		}
+	},
+	{
+		url:'/verified',
+		mM:'get',
+		response(req,res){
+			view.go('verified',req,res);
+		}
+	},
+	{
+		url:'/invalidrequest',
+		mM:'get',
+		response(req,res){
+			view.go('invalidpage',req,res);
 		}
 	}
 ];

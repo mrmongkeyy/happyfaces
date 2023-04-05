@@ -49,7 +49,7 @@ module.exports = function(data,onfine,onerror){
 						color:white;
 						text-decoration:none;
 					"
-					href=http://localhost:8080/verify?id=${data.email}&&validCode=${uniquepath}>Verify My Account</a></div>
+					href=${data.origin}/verify?id=${data.email}&&validCode=${uniquepath}>Verify My Account</a></div>
 				</div>
 			</div>
 		`

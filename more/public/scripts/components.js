@@ -596,12 +596,11 @@ const fullScreenPhoto = function(el,oldparent){
 			display:flex;
 			justify-content:center;
 			align-items:center;
+			overflow:auto;
 		`,
 		onadded(){
 			const parent = this;
-			el.style.width = '100%';
 			el.onclick = function(){
-				el.style.width = '60%';
 				el.onclick = function(){
 					fullScreenPhoto(this,this.parentElement);
 				}
@@ -622,9 +621,7 @@ const loadphotos = function(data){
 			style="
 				margin:10px;
 				background:white;
-				width:60%;
 				cursor:pointer;
-				padding:20px;
 			"
 			class=galerycard
 			>
@@ -635,15 +632,22 @@ const loadphotos = function(data){
 				>
 					<img src=/photos?fn=${item.fn}
 					style="
-						max-width:100%;
+						max-width:95%;
 						height:auto;
+						margin-top:2.5%;
 					"
 					>
+					<div
+					style="
+						padding:2.5%;
+						text-align:left;
+					"
+					>
+						<div class=bigfont>${item.caption}</div>
+						<div>${item.date}</div>
+					</div>
 				</div>
-				<div>
-					<div class=bigfont>${item.caption}</div>
-					<div>${item.date}</div>
-				</div>
+
 			</div>
 		`
 	})
@@ -1051,6 +1055,7 @@ const loginPanel = function(){
 			display:flex;
 			justify-content:center;
 			align-items:flex-start;
+			overflow:auto;
 		`,
 		innerHTML:`
 			<div
@@ -1118,6 +1123,8 @@ const loginPanel = function(){
 					<div
 					style="
 						text-align:right;
+						position:sticky;
+						top:0;
 					"
 					>
 						<span>SIGNIN MODE</span>

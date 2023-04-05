@@ -1,8 +1,10 @@
 const sendmail = require('./mailer/emailsender.js');
+const getOrigin = require('./getOrigin.js');
 const fs = require('fs');
 module.exports = function(req,res){
 	req.on('data',(data)=>{
 		data = JSON.parse(data.toString());
+		data.origin = getOrigin(req);
 		sendmail(data,(uniquepath)=>{
 			fs.readFile('./more/private/db/verificationantrees.base',(err,datafile)=>{
 				if(err)throw err;

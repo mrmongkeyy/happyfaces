@@ -11,14 +11,20 @@ module.exports = function(req,res){
 				delete datafile[datauser.id];
 				fs.writeFile('./more/private/db/verificationantrees.base',JSON.stringify(datafile),(err)=>{
 					if(err)throw err;
-					res.send('Your account hasbeen verified.');
+					res.send(`
+						<h4 style=font-family:monospace>Mohon Tunggu...</h4>
+						<script>
+							setTimeout(function(){
+								location.href = '${(req.headers.host==='localhost:8080'?'http':'https')}://${req.headers.host}/verified';
+							},1000)
+						</script>`);
 				})	
 			})
 		}else res.send(`
-			<h2>Invalid Request.</h2>
+			<h4 style=font-family:monospace>Mohon Tunggu...</h4>
 			<script>
 				setTimeout(function(){
-					location.href = 'http://localhost:8080';
+					location.href = '${(req.headers.host==='localhost:8080'?'http':'https')}://${req.headers.host}/invalidrequest';
 				},1000)
 			</script>
 		`)
