@@ -4,7 +4,7 @@ module.exports = {
 			<!doctype html>
 			<html>
 				<head>
-					<title>happyfaces</title>
+					<title>happyfaces, save happy moment</title>
 					<meta name=viewport content=width=device-width,initial-scale=1>
 					<style>
 						#content{
@@ -23,7 +23,7 @@ module.exports = {
 							width:50%;
 						}
 						.footerSetting{
-							justify-content:center;
+							justify-content:space-around;
 							width:50%;
 						}
 						.footerItems{

@@ -69,7 +69,7 @@ const footer = function(){
 const finder = function(){
 	return makeElement('div',{
 		style:`
-			background:lightseagreen;
+			background:teal;
 			height:50px;
 			display:flex;
 			justify-content:space-around;
@@ -106,7 +106,7 @@ const finder = function(){
 const content = function(){
 	return makeElement('content',{
 		style:`
-			background:beige;
+			background:lightseagreen;
 			height:80%;
 			align-items:center;
 			display:flex;
@@ -325,7 +325,7 @@ const contentItem = function(data,classes=false){
 						justify-content:center;
 						align-items:center;
 						padding:5px;
-						background:beige;
+						background:lightseagreen;
 						border-radius:50%;
 					"
 					>
@@ -387,7 +387,7 @@ const contentItem = function(data,classes=false){
 						justify-content:center;
 						align-items:center;
 						padding:5px;
-						background:beige;
+						background:lightseagreen;
 						border-radius:50%;
 					"
 					>
@@ -677,8 +677,8 @@ const profileHandleCategory = function(data,p='bio'){
 							min-height:128px;
 							width:auto;
 							height:auto;
-							background:beige;
-							padding:5px;
+							background:teal;
+							padding:10px;
 							display:inline-block;
 							border-radius:50%;
 							margin-top:10px;
@@ -696,7 +696,7 @@ const profileHandleCategory = function(data,p='bio'){
 					<div
 					style="
 						min-width:70%;
-						background:beige;
+						background:white;
 						min-height:100px;
 						margin-top:10px;
 						border-radius:10px;
@@ -883,6 +883,7 @@ const header = function(){
 			height:12%;
 			align-items:center;
 			display:flex;
+			justify-content:space-around;
 		`,
 		onadded(){
 			const parent = this;
@@ -902,7 +903,7 @@ const header = function(){
 					font-size:11px;
 					display:flex;
 					flex-direction:column;
-					justify-content:center;
+					justify-content:space-around;
 					align-items:center;
 				`
 			});

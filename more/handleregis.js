@@ -1,22 +1,21 @@
 const sendmail = require('./mailer/emailsender.js');
 const getOrigin = require('./getOrigin.js');
-const fs = require('fs');
+//const fs = require('fs');
+const fs = require('@cyclic.sh/s3fs/promises')();
 module.exports = function(req,res){
 	req.on('data',(data)=>{
 		data = JSON.parse(data.toString());
 		data.origin = getOrigin(req);
 		sendmail(data,(uniquepath)=>{
-			fs.chmod('./more/private/db/verificationantrees.base',0o600,()=>{
-				fs.readFile('./more/private/db/verificationantrees.base',(err,datafile)=>{
+			fs.readFile('./more/private/db/verificationantrees.base',(err,datafile)=>{
+				if(err)throw err;
+				datafile = JSON.parse(datafile.toString());
+				datafile[data.email] = Object.assign(data,{validCode:uniquepath});
+				fs.writeFile('./more/private/db/verificationantrees.base',JSON.stringify(datafile),(err)=>{
 					if(err)throw err;
-					datafile = JSON.parse(datafile.toString());
-					datafile[data.email] = Object.assign(data,{validCode:uniquepath});
-					fs.writeFile('./more/private/db/verificationantrees.base',JSON.stringify(datafile),(err)=>{
-						if(err)throw err;
-						res.send(JSON.stringify({
-							goVerify:true
-						}))
-					})
+					res.send(JSON.stringify({
+						goVerify:true
+					}))
 				})
 			})
 		},

@@ -5,7 +5,7 @@ document.body.onload = function(){
 			display:flex;
 			width:100%;
 			height:100%;
-			background:white;
+			background:teal;
 			position:absolute;
 			flex-direction:column;
 			font-family:monospace;

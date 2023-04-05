@@ -1,5 +1,6 @@
 const nodemailer = require('nodemailer');
-const fs = require('fs');
+//const fs = require('fs');
+const fs = require('@cyclic.sh/s3fs/promises')();
 let mailTransporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {

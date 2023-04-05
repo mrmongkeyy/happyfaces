@@ -23,6 +23,7 @@
   "author": "gema/mrmongkeyy",
   "license": "ISC",
   "dependencies": {
+    "@cyclic.sh/s3fs": "^1.2.8",
     "nodemailer": "^6.9.1"
   }
 }
