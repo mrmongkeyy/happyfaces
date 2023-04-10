@@ -1,23 +1,20 @@
-const fs = require('fs');
-const path = require('path');
+const db = require('./db');
 module.exports = function(req,res){
 	req.on('data',(data)=>{
 		data = JSON.parse(data);
 		const handler = {
-			afterUpload(){
-				fs.readFile(`./more/private/media/${data.id}.base`,{root:path.join(__dirname)},(err,file)=>{
-					if(err)throw err;
-					file = JSON.parse(file.toString());
-					file.push({
-						caption:data.caption,
-						fn:data.fname,
-						date:data.date
-					});
-					fs.writeFile(`./more/private/media/${data.id}.base`,JSON.stringify(file),(err)=>{
-						if(err)throw err;
-						res.send('ok');
-					})
-				})
+			async newphoto(){
+				const persondata = await db.get({model:data.id,schema:'general'});
+				const togive = {
+					caption:data.caption,
+					fn:data.fname,
+					date:data.date,
+					data:data.data
+				}
+				persondata[0].galery.push(togive);
+				const newgalery = persondata[0].galery;
+				await db.updateone({model:data.id,schema:'general',where:{parentad:data.id},set:{galery:newgalery}});
+				res.send(JSON.stringify({valid:true}));
 			},
 			editBio(){
 

@@ -5,8 +5,11 @@ const ufile = require('./ufile.js');
 const handleLogin = require('./handlelogin.js');
 const dataUpdateHandle = require('./dataUpdateHandle.js');
 const path = require('path');
-const handleRegis = require('./handleregis.js');
 const handleVerify = require('./handleverify.js');
+const handleRequestUserList = require('./RUL.js');
+const handleregis = require('./handleregis.js');
+const handleUserDetailsReq = require('./handleuserdetailsreq.js');
+const handleLoadPhotosReq = require('./loadPhotosHandlingReq');
 module.exports = [
 	{
 		url:'/',
@@ -47,9 +50,8 @@ module.exports = [
 		url:'/getuserlist',
 		mM:'get',
 		response(req,res){
-			res.sendFile(`./private/db/users.base`,{root:path.join(__dirname)},(err)=>{
-				if(err)throw err;
-			})
+			//connect to db, then send the data.
+			handleRequestUserList(req,res);
 		}
 	},
 	{
@@ -65,18 +67,14 @@ module.exports = [
 		url:'/getuserdetail',
 		mM:'get',
 		response(req,res){
-			res.sendFile(`./private/db/users/${req.query.id}.base`,{root:path.join(__dirname)},(err)=>{
-				if(err)throw err;
-			})
+			handleUserDetailsReq(req,res);
 		}
 	},
 	{
 		url:'/loadphotos',
 		mM:'get',
 		response(req,res){
-			res.sendFile(`./private/media/${req.query.id}.base`,{root:path.join(__dirname)},(err)=>{
-				if(err)throw err;
-			})
+			handleLoadPhotosReq(req,res);
 		}
 	},
 	{
@@ -106,7 +104,7 @@ module.exports = [
 		url:'/regis',
 		mM:'post',
 		response(req,res){
-			handleRegis(req,res);
+			handleregis(req,res);
 		}
 	},
 	{

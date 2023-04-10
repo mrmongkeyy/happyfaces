@@ -93,7 +93,7 @@ const finder = function(){
 						padding:10px;
 						border:none;
 						outline:none;
-						background:lightsalmon;
+						background:lightseagreen;
 						color:white;
 						cursor:pointer;
 					"
@@ -111,7 +111,6 @@ const content = function(){
 			align-items:center;
 			display:flex;
 			flex-direction:column;
-			padding:5px 0;
 			justify-content:flex-start;
 			overflow:auto;
 		`,
@@ -157,7 +156,7 @@ const loadUsersData = function(){
 					JSON.parse(data).forEach(data=>{
 						find('#contentContainer').addChild(contentItem(data));
 					})
-					find('#contentContainer').addChild(lastOne());
+					//find('#contentContainer').addChild(lastOne());
 					this.el.remove();
 				}
 			})
@@ -221,7 +220,7 @@ const loadUserDetails = function(userid,callback){
 				url:`/getuserdetail?id=${userid}`,
 				onload(r){
 					const data = r.target.responseText;
-					callback(data);
+					callback(JSON.parse(data));
 					this.el.remove();
 				}
 			})
@@ -246,18 +245,19 @@ const loginprocess = function(inputs){
 }
 const regisprocess = function(inputs){
 	const data = JSON.stringify({
+		parentad:'null',
 		email:inputs[0].value,
 		username:inputs[1].value,
 		password:inputs[2].value,
 		name:inputs[3].value,
-		old:inputs[4].value,
+		age:inputs[4].value,
 		birthdate:inputs[5].value,
 		birthplace:inputs[6].value,
-		moto:inputs[7].value,
-		msg:inputs[8].value,
+		motto:inputs[7].value,
+		message:inputs[8].value,
 		hobbies:inputs[9].value,
 		dreams:inputs[10].value,
-		picture:'user.png'
+		profile:find('#previewProfile').Buffer
 	});
 	find('content').addChild(makeElement('div',{
 		style:`
@@ -310,7 +310,7 @@ const contentItem = function(data,classes=false){
 				cursor:pointer;
 				min-height:90px;
 				background:white;
-				margin-bottom:10px;
+				margin-top:10px;
 				display:flex;
 				justify-content:space-around;
 				align-items:center;
@@ -325,11 +325,11 @@ const contentItem = function(data,classes=false){
 						justify-content:center;
 						align-items:center;
 						padding:5px;
-						background:lightseagreen;
+						background:white;
 						border-radius:50%;
 					"
 					>
-						<img src=/profilepics?fn=${data.picture}
+						<img src=/profilepics?fn=${data.profile}
 						style="
 							width:64px;
 							height:64px;
@@ -370,7 +370,7 @@ const contentItem = function(data,classes=false){
 				justify-content:space-around;
 				align-items:center;
 				cursor:pointer;
-				padding:10px;
+				float:left;
 			`,
 			className:'responsiveWidth',
 			innerHTML:`
@@ -387,11 +387,10 @@ const contentItem = function(data,classes=false){
 						justify-content:center;
 						align-items:center;
 						padding:5px;
-						background:lightseagreen;
 						border-radius:50%;
 					"
 					>
-						<img src=/profilepics?fn=${data.picture}
+						<img src=${data.profile}
 						style="
 							width:64px;
 							height:64px;
@@ -407,13 +406,13 @@ const contentItem = function(data,classes=false){
 				"
 				>
 					<div class=smallfont>
-						<span>@${data.username}</span>
+						<span>${data.email}</span>
 					</div>
 					<div class=bigfont>
-						<span>${data.name}</span>
+						<span>@${data.username}</span>
 					</div>
 					<div class=normalfont>
-						<span>${data.quote}</span>
+						<span>${data.motto||'notquote'}</span>
 					</div>
 				</div>
 			`,
@@ -437,10 +436,7 @@ const contentContainer = function(){
 		style:`
 			width:100%;
 			height:100%;
-			display:flex;
-			flex-direction:column;
-			justify-content:flex-start;
-			align-items:center;
+			margin-top:10px;
 		`,
 		id:'contentContainer'
 	})
@@ -488,7 +484,7 @@ const backSection = function(){
 			style="
 				padding:10px;
 				float:left;
-				background:lightsalmon;
+				background:teal;
 				cursor:pointer;
 			"
 			>
@@ -499,7 +495,7 @@ const backSection = function(){
 			this.find('div').onclick = ()=>{
 				this.parentNode.find('#thingsProfile').innerHTML = '';
 				this.parentNode.hide();
-				this.parentNode.parentNode.find('#contentContainer').show('flex');
+				this.parentNode.parentNode.find('#contentContainer').show('inline-block');
 			}
 		}
 	})
@@ -520,7 +516,7 @@ const category = function(){
 			style="
 				padding:10px;
 				float:left;
-				background:lightsalmon;
+				background:teal;
 				cursor:pointer;
 			"
 			id=bio
@@ -532,7 +528,7 @@ const category = function(){
 			style="
 				padding:10px;
 				float:left;
-				background:lightsalmon;
+				background:teal;
 				cursor:pointer;
 				margin:0 5px;
 			"
@@ -544,7 +540,7 @@ const category = function(){
 			style="
 				padding:10px;
 				float:left;
-				background:lightsalmon;
+				background:teal;
 				cursor:pointer;
 				margin:0 5px;
 			"
@@ -556,7 +552,7 @@ const category = function(){
 			style="
 				padding:10px;
 				float:left;
-				background:lightsalmon;
+				background:teal;
 				cursor:pointer;
 			"
 			>
@@ -585,6 +581,7 @@ const notSignedUserHandle = function(el){
 }
 
 const fullScreenPhoto = function(el,oldparent){
+	let oldChilds = oldparent.children;
 	find('content').addChild(makeElement('div',{
 		style:`
 			position:absolute;
@@ -595,15 +592,36 @@ const fullScreenPhoto = function(el,oldparent){
 			background:RGB(0,0,0,.5);
 			display:flex;
 			justify-content:center;
-			align-items:center;
 			overflow:auto;
 		`,
 		onadded(){
 			const parent = this;
+			el.style.width = '100%';
+			el.querySelector('div').style.width = '100%';
+			el.querySelector('div').style.height = '100%';
+			el.querySelector('div').style.background = 'none';
+			el.querySelector('div').style.flexDirection = 'column';
+			el.querySelector('img').style.width = 'auto';
+			el.querySelector('img').style.maxWidth = '90%';
+			el.querySelector('img').style.height = 'auto';
+			el.querySelector('img').style.position = 'static';
+			el.querySelector('#label').style.position = 'static';
 			el.onclick = function(){
 				el.onclick = function(){
 					fullScreenPhoto(this,this.parentElement);
 				}
+				el.style.width = 'auto';
+				el.querySelector('div').style.width = '250px';
+				el.querySelector('div').style.height = '250px';
+				el.querySelector('div').style.background = 'white';
+				el.querySelector('div').style.flexDirection = 'column';
+				el.querySelector('img').style.width = '250px';
+				el.querySelector('img').style.position = 'absolute'
+				el.querySelector('img').style.maxWidth = '100%';
+				el.querySelector('img').style.height = '250px';
+				el.querySelector('#label').style.position = 'absolute';
+				find('#lastOne').id = '';
+				el.querySelector('div').id = 'lastOne';
 				oldparent.appendChild(el);
 				parent.remove();
 			}
@@ -614,34 +632,61 @@ const fullScreenPhoto = function(el,oldparent){
 
 const loadphotos = function(data){
 	const el = find('#photosItem');
-	data.forEach(item=>{
+	//handling 0 data.
+	if(data.length==0){
+		el.innerHTML = `
+			<div
+			style="
+				background:white;
+				padding:10px;
+				margin-top:10px;
+			"
+			>No photos from this user.</div>
+		`;
+		return;
+	}
+	data.forEach((item,i)=>{
 		el.innerHTML += `
 			<div
 			onclick=fullScreenPhoto(this,this.parentElement)
 			style="
-				margin:10px;
-				background:white;
+				margin:0 5px;
 				cursor:pointer;
 			"
 			class=galerycard
 			>
 				<div
 				style="
-					text-align:center;
+					width:250px;
+					height:250px;
+					position:relative;
+					background:white;
+					display:flex;
+					justify-content:center;
+					align-items:center;
+					max-height:95%;
+					margin-top:10px;
 				"
+				id=${(i===data.length-1)?'lastOne':''}
 				>
-					<img src=/photos?fn=${item.fn}
+					<img src=${item.data}
 					style="
-						max-width:95%;
-						height:auto;
-						margin-top:2.5%;
+						width:250px;
+						height:250px;
+						object-fit:cover;
+						position:absolute;
+						background:white;
 					"
 					>
 					<div
 					style="
 						padding:2.5%;
 						text-align:left;
+						position:absolute;
+						background:white;
+						width:95%;
 					"
+					id=label
 					>
 						<div class=bigfont>${item.caption}</div>
 						<div>${item.date}</div>
@@ -677,14 +722,14 @@ const profileHandleCategory = function(data,p='bio'){
 							min-height:128px;
 							width:auto;
 							height:auto;
-							background:teal;
+							background:white;
 							padding:10px;
 							display:inline-block;
 							border-radius:50%;
 							margin-top:10px;
 						"
 						>
-							<img src=/profilepics?fn=${JSON.parse(data).picture}
+							<img src=${data.profile}
 							style="
 								max-width:128px;
 								max-height:128px;
@@ -719,10 +764,9 @@ const profileHandleCategory = function(data,p='bio'){
 				id:'photosItem',
 				style:`
 					display:flex;
-					flex-direction:column;
+					flex-wrap:wrap;
 					width:100%;
 					justify-content:center;
-					align-items:center;
 				`,
 				onadded(){
 					this.addChild(load(function(){
@@ -842,11 +886,11 @@ const profileHandleCategory = function(data,p='bio'){
 	}
 	event[p]();
 }
-const boxBioProcess = function(data='{}'){
+const boxBioProcess = function(data){
 	let text = ``;
-	data = JSON.parse(data);
 	for(field in data){
-		if(field!='picture')text += pieceOfBioBox(field,data[field]);
+		if(field!='galery'){text += pieceOfBioBox(field,data['galery'].length)};
+		if(field!='profile'){console.log(data[field]);text += pieceOfBioBox(field,data[field])};
 	}
 	return text;
 }
@@ -914,7 +958,7 @@ const header = function(){
 					align-items:center;
 				`,
 				innerHTML:`
-					<span style=cursor:pointer;font-size:20px;height:40px;display:flex;width:40px;align-items:center;justify-content:center;background:beige;border-radius:50%;>
+					<span style=cursor:pointer;font-size:20px;height:40px;display:flex;width:40px;align-items:center;justify-content:center;border-radius:50%;>
 						<img src=/file?fn=user.png
 						style="
 							width:32px;
@@ -924,7 +968,7 @@ const header = function(){
 						id=userprofile
 						>
 					</span>
-					<span id=logout style=margin-left:5px;cursor:pointer;font-size:20px;height:40px;display:none;width:40px;align-items:center;justify-content:center;background:beige;border-radius:50%;>
+					<span id=logout style=margin-left:5px;cursor:pointer;font-size:20px;height:40px;display:none;width:40px;align-items:center;justify-content:center;border-radius:50%;>
 						<img src=/file?fn=goout.png
 						style="
 							width:32px;
@@ -1005,41 +1049,35 @@ const uploadSectionStarted = function(files,caption){
 			</div>
 		`,
 		onadded(){
+			const eltoremove = this;
+			const userId = this.user_id;
 			const date = getTime();
 			const fileName = `${this.user_id+date}.${files[0].type.split('/')[1]}`;
-			uploadFile(files[0],1000,(r)=>{
-				const progress = Math.floor((r/files[0].size)*100);
-				this.find('#loadingdiv').innerHTML = progress+'%';
-			},(r)=>{
-				//file's uploaded. time to update the data.
-
+			//read that file, i will get the dataurl.
+			const fs = new FileReader();
+			fs.onload = function(){
 				cOn.post({
 					url:'/updateData',
 					someSettings:[
 						['setRequestHeader','content-type','application/json']
 					],
 					data:JSON.stringify({
-						mode:'afterUpload',
+						mode:'newphoto',
 						caption,
 						date:new Date().toLocaleString(),
-						id:this.user_id,
-						fname:fileName
+						id:userId,
+						fname:fileName,
+						data:this.result
 					}),
 					onload(r){
-						find('#categoryElement #photos').click();
+						if(JSON.parse(r.target.responseText).valid){
+							eltoremove.remove();
+							find('#categoryElement #photos').click();
+						}
 					}
 				})
-
-
-
-				this.find('#uploadingparent').innerHTML = 'file uploaded.';
-				setTimeout(()=>{
-					this.remove();
-				},1000);
-			},{
-				fname:fileName,
-				caption
-			})
+			}
+			fs.readAsDataURL(files[0]);
 		}
 	}))
 }
@@ -1163,7 +1201,7 @@ const loginPanel = function(){
 					<div>
 						<div>Birthdate</div>
 						<div>
-							<input>
+							<input type=date>
 						</div>
 					</div>
 					<div>
@@ -1194,6 +1232,32 @@ const loginPanel = function(){
 						<div>Dreams</div>
 						<div>
 							<input>
+						</div>
+					</div>
+					<div
+					style="
+						text-align:right;
+					"
+					>
+						<div>Pilih Profile</div>
+						<div>
+							<button class=button id=cprofile>Pilih</button>
+							<input type=file style=display:none; accept='image/*'>
+						</div>
+					</div>
+					<div>
+						<div
+						style=text-align:center;
+						>
+							<img id=previewProfile
+							style="
+								max-width:150px;
+								max-height:150px;
+								object-fit:cover;
+								display:none;
+								margin-top:5px;
+							"
+							>
 						</div>
 					</div>
 					<div
@@ -1286,13 +1350,25 @@ const loginPanel = function(){
 		onadded(){
 			this.findall('.button').forEach(button=>{
 				button.onclick = ()=>{
-					this.handlepagebuttons(button.id);
+					this.handlepagebuttons(button.id,button);
 				}
 			})
 		},
-		handlepagebuttons(id){
+		handlepagebuttons(id,self){
 			const parent = this;
 			const events = {
+				cprofile(){
+					self.parentNode.querySelector('input').onchange = function(){
+						const fs = new FileReader();
+						fs.onload = function(){
+							find('#previewProfile').Buffer = this.result;
+							find('#previewProfile').src = this.result;
+							showElement(find('#previewProfile'),'inline-block');
+						}
+						fs.readAsDataURL(this.files[0]);
+					}
+					self.parentNode.querySelector('input').click();
+				},
 				passforgot(){
 					this.go('#resetpassmode')
 				},
@@ -1339,7 +1415,7 @@ const processresponse = function(res,id){
 				find('#loginpanel').remove();
 				find('content').addChild(loadUserDetails(this.res.id,function(r){
 					const profileimg = find('#userprofile');
-					profileimg.src = `/profilepics?fn=${JSON.parse(r).picture}`;
+					profileimg.src = r.profile;
 					profileimg.onload = function(){
 						showElement(find('#logout'));
 						notSignedUserHandle(find('#profilePage'));

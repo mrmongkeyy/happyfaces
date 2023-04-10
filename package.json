@@ -23,7 +23,8 @@
   "author": "gema/mrmongkeyy",
   "license": "ISC",
   "dependencies": {
-    "@cyclic.sh/s3fs": "^1.2.8",
+    "mongodb": "^5.2.0",
+    "mongoose": "^7.0.3",
     "nodemailer": "^6.9.1"
   }
 }

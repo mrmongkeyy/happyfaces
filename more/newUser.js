@@ -1,5 +1,5 @@
 //const fs = require('fs');
-const fs = require('@cyclic.sh/s3fs/promises')();
+const fs = require('@cyclic.sh/s3fs');
 //use cyclic fs function.
 let datafirst;
 module.exports = function(data,callback){

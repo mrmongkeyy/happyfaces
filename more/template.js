@@ -54,12 +54,18 @@ module.exports = {
 							padding:5px;
 							cursor:pointer;
 						}
+						#contentContainer{
+							display:inline-block;
+						}
+						#lastOne{
+							margin-bottom:10px;
+						}
 						@media screen and (max-width:900px){
 							#content{
 								width:100%;
 							}
 							.responsiveWidth{
-								width:90%;
+								width:100%;
 							}
 							.footerSetting{
 								justify-content:space-around;

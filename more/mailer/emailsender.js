@@ -1,15 +1,12 @@
 const nodemailer = require('nodemailer');
-//const fs = require('fs');
-const fs = require('@cyclic.sh/s3fs/promises')();
 let mailTransporter = nodemailer.createTransport({
 	service: 'gmail',
 	auth: {
 		user: 'mrmongkeyy@gmail.com',
-		pass: 'qhsbzyqxrdlqdgpk'
+		pass: 'iuxbxcerqssluupr'
 	}
 });
 module.exports = function(data,onfine,onerror){
-	const uniquepath = require('../unique.js')();
 	let mailDetails = {
 		from:'happyfaces.cyclic.app',
 		to:data.email,
@@ -50,7 +47,7 @@ module.exports = function(data,onfine,onerror){
 						color:white;
 						text-decoration:none;
 					"
-					href=${data.origin}/verify?id=${data.email}&&validCode=${uniquepath}>Verify My Account</a></div>
+					href=${data.origin}/verify?id=${data.id}&&valid=${data.valid}>Verify My Account</a></div>
 				</div>
 			</div>
 		`
@@ -60,7 +57,7 @@ module.exports = function(data,onfine,onerror){
 			console.log(err);
 			onerror();
 		}else {
-			onfine(uniquepath);
+			onfine();
 		}
 	});
 }
