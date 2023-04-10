@@ -940,7 +940,7 @@ const header = function(){
 					"
 					>
 					<span style=cursor:pointer;>
-						happyfaces
+						hao0 app
 					</span>
 				`,
 				style:`
