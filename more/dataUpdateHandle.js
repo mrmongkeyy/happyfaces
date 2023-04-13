@@ -1,26 +1,32 @@
-const db = require('./db');
+const db = require('./nodb');
 module.exports = function(req,res){
-	req.on('data',(data)=>{
-		data = JSON.parse(data);
-		const handler = {
-			async newphoto(){
-				const persondata = await db.get({model:data.id,schema:'general'});
-				const togive = {
-					caption:data.caption,
-					fn:data.fname,
-					date:data.date,
-					data:data.data
-				}
-				persondata[0].galery.push(togive);
-				const newgalery = persondata[0].galery;
-				await db.updateone({model:data.id,schema:'general',where:{parentad:data.id},set:{galery:newgalery}});
-				res.send(JSON.stringify({valid:true}));
-			},
-			editBio(){
+	const data = req.body;
+	const handler = {
+	  handlingCaption(){
+		  db.openDb(data.id,()=>{
+		    db.JSONDATA['media'].push({
+			    caption:data.caption,
+			    fn:data.fname,
+			    date:data.date,
+			    fileType:data.fileType,
+			    data:''
+		    });
+		    db.save(()=>{
+		      res.send(JSON.stringify({valid:true,updateAntree:db.JSONDATA.media.length-1}));
+		    })
+		  })	
+	  },
+	  editBio(){
 
-			}
-		}
-		handler[data.mode]();
-	})
-	
+	  },
+	  handlingFile(){
+	    db.openDb(data.id,()=>{
+	      db.JSONDATA.media[data.antrees].data += data.data;
+	      db.save(()=>{
+	        res.send('ok');
+	      });
+	    })
+	  }
+  }
+  handler[data.mode]();
 }

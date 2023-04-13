@@ -1,7 +1,9 @@
-const db = require('./db');
+const db = require('./nodb');
 const remove = require('./objcleaner');
 module.exports = async function(req,res){
-	let data = await db.get({model:req.query.id,schema:'general',where:{parentad:req.query.id}},true);
-	remove(data[0]._doc,['_id','parentad','password','__v']);
-	res.send(JSON.stringify(data[0]));
+	//let data = await db.get({model:req.query.id,schema:'general',where:{parentad:req.query.id}},true);
+	db.openDb(req.query.id,()=>{
+	  remove(db.JSONDATA,['parentad','password']);
+  	res.send(JSON.stringify(db.JSONDATA));    
+	})
 }

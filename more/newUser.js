@@ -5,7 +5,6 @@ let datafirst;
 module.exports = function(data,callback){
 	//working on users base.
 	datafirst = data;
-	console.log(datafirst,data);
 	fs.writeFile(`./more/private/db/users/${datafirst.validCode}.base`,JSON.stringify({
 		NAME:datafirst.name,
 		OLD:datafirst.old,

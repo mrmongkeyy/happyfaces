@@ -4,7 +4,7 @@ module.exports = {
 			<!doctype html>
 			<html>
 				<head>
-					<title>hao0, save happy moment</title>
+					<title>hao0, save your happy moment!</title>
 					<meta name=viewport content=width=device-width,initial-scale=1>
 					<style>
 						#content{
@@ -109,7 +109,7 @@ module.exports = {
 			<!doctype html>
 			<html>
 				<head>
-					<title>hao0, validation clear</title>
+					<title>hao0, validation complete.</title>
 					<meta name=viewport content=width=device-width,initial-scale=1>
 					<link rel=icon href=file?fn=happy-face.png>
 					<style>
@@ -157,7 +157,7 @@ module.exports = {
 			<!doctype html>
 			<html>
 				<head>
-					<title>hao0, invalid request page</title>
+					<title>hao0, invalid request</title>
 					<meta name=viewport content=width=device-width,initial-scale=1>
 					<link rel=icon href=file?fn=happy-face.png>
 					<style>

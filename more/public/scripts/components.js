@@ -556,7 +556,7 @@ const category = function(){
 				cursor:pointer;
 			"
 			>
-				UPLOAD FOTO
+				UPLOAD
 			</div>
 		`,
 		onadded(){
@@ -641,14 +641,14 @@ const loadphotos = function(data){
 				padding:10px;
 				margin-top:10px;
 			"
-			>No photos from this user.</div>
+			>No upload from this user.</div>
 		`;
 		return;
 	}
 	data.forEach((item,i)=>{
 		el.innerHTML += `
 			<div
-			onclick=fullScreenPhoto(this,this.parentElement)
+			${item.fileType!='audio'?'onclick=fullScreenPhoto(this,this.parentElement)':''}
 			style="
 				margin:0 5px;
 				cursor:pointer;
@@ -669,7 +669,7 @@ const loadphotos = function(data){
 				"
 				id=${(i===data.length-1)?'lastOne':''}
 				>
-					<img src=${item.data}
+					<${item.fileType} src=${item.data}
 					style="
 						width:250px;
 						height:250px;
@@ -677,7 +677,8 @@ const loadphotos = function(data){
 						position:absolute;
 						background:white;
 					"
-					>
+					controls
+					></${item.fileType}>
 					<div
 					style="
 						padding:2.5%;
@@ -697,6 +698,93 @@ const loadphotos = function(data){
 		`
 	})
 }
+
+const editProfileHandle = function(id,srcdocument){
+  id = id.split('.')[0];
+  const handler = {
+    openPop(text,el){
+      srcdocument.addChild(makeElement('div',{
+        style:`
+          position:absolute;
+          width:100%;
+          height:100%;
+          top:0;
+          left:0;
+          background:RGB(0,0,0,0.5);
+          display:flex;
+          align-items:center;
+          justify-content:center;
+        `,
+        innerHTML:`
+          <div
+          style="
+            padding:10px;
+            background:lightseagreen;
+            display:flex;
+            flex-direction:column;
+          "
+          >
+            <span
+            style=margin-bottom:10px;
+            >${text}</span>
+            <input
+            style=margin-bottom:10px;
+            >
+            <div>
+              <button id=savebutton>simpan</button>
+            </div>
+          </div>
+        `,
+        onadded(){
+          this.find('#savebutton').onclick = ()=>{
+            if(this.find('input').value!='')srcdocument.find(`#editable${el}`).innerText = this.find('input').value;
+            this.remove();
+          }
+        }
+      }))
+    },
+    profile(){
+      const fileInput = makeElement('input',{
+        type:'file',
+        accept:'image/*',
+        onchange(){
+          const fs = new FileReader();
+          fs.onload = ()=>{
+            srcdocument.find('#profileel').src = fs.result;
+          }
+          fs.readAsDataURL(this.files[0]);
+        }
+      });
+      fileInput.click();
+    },
+    name(){
+      this.openPop('Tulis nama baru...','name');
+    },
+    age(){
+      this.openPop('Tulis umur baru...','age');
+    },
+    birthdate(){
+      this.openPop('Tulis tanggallahir baru','birthdate');
+    },
+    birthplace(){
+      this.openPop('Tulis tempat lahir baru','birthplace');
+    },
+    motto(){
+      this.openPop('Tulis motto baru anda','motto');
+    },
+    message(){
+      this.openPop('Tulis pesan anda','message');
+    },
+    hobbies(){
+      this.openPop('Perbarui hobi anda','hobbies');
+    },
+    dreams(){
+      this.openPop('Perbarui mimpi anda','dreams');
+    }
+  }
+  if(handler[id])handler[id]();
+}
+
 const profileHandleCategory = function(data,p='bio'){
 	const event = {
 		el:find('#thingsProfile'),
@@ -718,14 +806,9 @@ const profileHandleCategory = function(data,p='bio'){
 					<div>
 						<span
 						style="
-							min-width:128px;
-							min-height:128px;
-							width:auto;
-							height:auto;
-							background:white;
-							padding:10px;
+							height:128px;
+							width:128px;
 							display:inline-block;
-							border-radius:50%;
 							margin-top:10px;
 						"
 						>
@@ -734,6 +817,7 @@ const profileHandleCategory = function(data,p='bio'){
 								max-width:128px;
 								max-height:128px;
 								border-radius:50%;
+								object-fit:cover;
 							"	
 							>
 						</span>
@@ -784,12 +868,88 @@ const profileHandleCategory = function(data,p='bio'){
 		},
 		editBio(){
 			this.sweep();
-			this.el.addChild(makeElement('div'),{
-				id:'#bioEdit',
+			if(!data){
+				data = find('#profilePage').biodata;
+			}
+			this.el.addChild(makeElement('div',{
+				id:'bioEdit',
+				style:`
+					display:flex;
+					justify-content:flex-start;
+					flex-direction:column;
+					align-items:center;
+					width:100%;
+				`,
 				innerHTML:`
-
-				`
-			})
+					<div
+					style="
+						display:flex;
+						align-items:center;
+					"
+					>
+						<span
+						style="
+							width:130px;
+							height:130px;
+							display:inline-block;
+							margin-top:10px;
+						"
+						>
+							<img src=${data.profile}
+							style="
+							  width:128px;
+							  height:128px;
+							  object-fit:cover;
+								border-radius:50%;
+							"
+							id=profileel
+							>
+						</span>
+						<span
+						style="
+							padding:5px;
+							background:white;
+							width:28px;
+							height:28px;
+							border-radius:50%;
+							margin-left:10px;
+							cursor:pointer;
+						"
+						>
+							<img src=/file?fn=edit.png
+							class=editbutton
+							id=profile
+							style="
+								width:24px;
+								height:24px;
+							"
+							>
+						</span>
+					</div>
+					<div
+					style="
+						min-width:70%;
+						background:white;
+						min-height:100px;
+						margin-top:10px;
+						border-radius:10px;
+						font-size:14px;
+						margin-bottom:20px;
+					"
+					>
+						${boxBioProcess(data,true)}
+					</div>
+					
+				`,
+				onadded(){
+					find('#profilePage').biodata = data;
+					findall('.editbutton').forEach(button=>{
+					  button.onclick = ()=>{
+					    editProfileHandle(button.id,this);
+					  }
+					})
+				}
+			}))
 		},
 		uploadPhoto(){
 			this.sweep();
@@ -814,11 +974,12 @@ const profileHandleCategory = function(data,p='bio'){
 								text-align:center;
 							"
 							>
-								<img src=${r}
+								<${fileInput.files[0].type.slice(0,fileInput.files[0].type.indexOf('/'))} src=${r}
 								style="
 									max-width:90%;
 									max-height:90%;
 								"
+								controls
 								>
 							</span>
 						</div>
@@ -869,13 +1030,15 @@ const profileHandleCategory = function(data,p='bio'){
 			}
 			const fileInput = makeElement('input',{
 				type:'file',
-				accept:'image/*',
+				accept:'image/*, audio/*, video/*',
 				onchange(){
+					file = this.files[0];
 					readFile(this.files[0],'readAsDataURL',display);
 				}
 			})
+			//handling user canceling.
+			document.onfocus = ()=>{if(fileInput.files.length===0)this.photos()}
 			fileInput.click();
-			console.log(fileInput);
 		},
 		sweep(){
 			this.el.saveRemove('#photosItem');
@@ -886,15 +1049,15 @@ const profileHandleCategory = function(data,p='bio'){
 	}
 	event[p]();
 }
-const boxBioProcess = function(data){
+const boxBioProcess = function(data,edit=false){
 	let text = ``;
 	for(field in data){
-		if(field!='galery'){text += pieceOfBioBox(field,data['galery'].length)};
-		if(field!='profile'){console.log(data[field]);text += pieceOfBioBox(field,data[field])};
+		if(field=='media'){text += pieceOfBioBox(field,data['media'].length+' media',edit)}
+		else if(field!='profile'){console.log(data[field]);text += pieceOfBioBox(field,data[field],edit)};
 	}
 	return text;
 }
-const pieceOfBioBox = function(field,value){
+const pieceOfBioBox = function(field,value,edit=false){
 	return `
 	<div
 	style="
@@ -902,6 +1065,7 @@ const pieceOfBioBox = function(field,value){
 		padding:4%;
 		display:flex;
 		justify-content:space-between;
+		align-items:center;
 	"
 	>
 		<div
@@ -912,10 +1076,19 @@ const pieceOfBioBox = function(field,value){
 		</div>
 		<div
 		style="
+			display:flex;
+			align-items:center;
 			text-align:right;
+			max-width:70%;
 		"
 		>
-			<span>${value}</span>
+			<span
+			style="
+			  overflow:auto;
+			"
+			${edit?'id=editable'+field:''}
+			>${value}</span>
+			${edit&&field!='media'&&field!='username'&&field!='email'?"<span style=margin-left:5px;cursor:pointer id="+field+".editbutton class=editbutton><img src=/file?fn=edit.png style='width:16px;height:16px;'></span>":''}
 		</div>
 	</div>
 	`
@@ -1050,32 +1223,66 @@ const uploadSectionStarted = function(files,caption){
 		`,
 		onadded(){
 			const eltoremove = this;
+			const loadingdiv = this.find('#loadingdiv');
 			const userId = this.user_id;
 			const date = getTime();
 			const fileName = `${this.user_id+date}.${files[0].type.split('/')[1]}`;
-			//read that file, i will get the dataurl.
-			const fs = new FileReader();
+ 			const fs = new FileReader();
+			//original methode.
 			fs.onload = function(){
-				cOn.post({
-					url:'/updateData',
-					someSettings:[
-						['setRequestHeader','content-type','application/json']
-					],
-					data:JSON.stringify({
-						mode:'newphoto',
-						caption,
-						date:new Date().toLocaleString(),
-						id:userId,
-						fname:fileName,
-						data:this.result
-					}),
-					onload(r){
-						if(JSON.parse(r.target.responseText).valid){
-							eltoremove.remove();
-							find('#categoryElement #photos').click();
-						}
-					}
-				})
+			  //send the caption first, and also make new schema to db.
+			  cOn.post({
+				  url:'/updateData',
+				  someSettings:[
+					  ['setRequestHeader','content-type','application/json']
+				  ],
+				  data:JSON.stringify({
+					  mode:'handlingCaption',
+					  caption,
+					  date:new Date().toLocaleString(),
+					  id:userId,
+					  fname:fileName,
+					  fileType:files[0].type.slice(0,files[0].type.indexOf('/'))
+				  }),
+				  onload(r){
+					  if(JSON.parse(r.target.responseText).valid){
+					    uploadfile(JSON.parse(r.target.responseText).updateAntree);
+					  }
+				  }
+			  })
+			  //uploading file.
+			  let start = 0;
+			  let thelastone = false;
+			  const uploadfile = (antrees)=>{
+			    let end = start + 100000;
+			    //handling overflow.
+			    if(end > this.result.length){
+			      end = end-(end-this.result.length);
+			      thelastone = true;
+			    }
+			    cOn.post({
+			      url:'/updateData',
+			      someSettings:[
+					    ['setRequestHeader','content-type','application/json']
+				    ],
+			      data:JSON.stringify({
+			        id:userId,antrees,
+			        data:this.result.slice(start,end),
+			        mode:'handlingFile'
+			      }),
+			      onload(r){
+			        if(r.target.responseText === 'ok'){
+			        	loadingdiv.innerHTML = Math.floor((end/fs.result.length)*100)+'%';
+			          if(thelastone){
+			            eltoremove.remove();
+			          }else{
+			            start = end;
+			            uploadfile(antrees);
+			          }
+			        }
+			      }
+			    })
+			  }
 			}
 			fs.readAsDataURL(files[0]);
 		}

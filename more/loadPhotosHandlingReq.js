@@ -1,5 +1,6 @@
-const db = require('./db');
+const db = require('./nodb');
 module.exports = async function(req,res){
-	const result = await db.get({model:req.query.id,schema:'general'});
-	res.send(JSON.stringify(result[0].galery))
+	db.openDb(req.query.id,()=>{
+	  res.send(JSON.stringify(db.JSONDATA.media));
+	})
 }

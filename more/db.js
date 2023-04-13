@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 module.exports = {
-  route:'mongodb://127.0.0.1:27017/',
+  route:'mongodb+srv://gemasaja:AwM1L7AGRPTvXf1z@hao0db.f8lgex7.mongodb.net/?retryWrites=true&w=majority',
   dbName:'tes',
   address(){
-    return this.route+this.dbName;
+    return this.route;
   },
   db:null,
   dbConfig(config={}){
@@ -14,8 +14,7 @@ module.exports = {
   },
   async init(){
     this.db = await mongoose.connect(this.address(),{
-      useNewUrlParser:true,
-      useUnifiedTopology:true
+      useNewUrlParser: true, useUnifiedTopology: true
     });
   },
   async start(init){

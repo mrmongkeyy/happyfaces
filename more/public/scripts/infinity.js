@@ -147,7 +147,7 @@ const cOn = {
 		this.x.send();
 	}
 }
-const uploadFile = function(file,transferRate=1000,progress,callback,dataoptional={}){
+const uploadFile = function(type='readAsArrayBuffer',file,transferRate=1000,progress,callback,dataoptional={}){
 	const fs = new FileReader();
 	fs.onload = function(){
 		const data = this.result;
@@ -181,7 +181,7 @@ const uploadFile = function(file,transferRate=1000,progress,callback,dataoptiona
 		send();
 		
 	}
-	fs.readAsArrayBuffer(file);
+	fs[type](file);
 }
 const readFile = function(src,readMode,callback){
 	const fr = new FileReader();
